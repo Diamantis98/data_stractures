@@ -4,6 +4,7 @@
 #include <memory>  // unique_ptr
 #include <stdlib.h>
 #include <cstddef>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -30,6 +31,7 @@ public:
     void Insert(string val);
     void searchWord(string val);
 
+    void printInorder(TreeNode* node, string val);
 private:
     TreeNode* root;
     std::string SubTreeAsString(TreeNode* node);  // Helper method for Print()
@@ -47,9 +49,13 @@ void BSTree::searchWord(string val){
 }
 
 void BSTree::searchWord(string val, TreeNode* node){
-  if(val == node->data){
-    std::cout << "Data found." << std::endl;
-    return;
+  std::string s = node->data;
+  if(s.rfind(val,0) == 0){
+    std::cout << "Data found. \n" << std::endl;
+    std::cout << "Possible matches : " << std::endl;
+
+    printInorder(node,val);
+    return ;
   }else if(val < node->data){
       if(node->left == NULL){
         std::cout << "Data NOT found." << std::endl;
@@ -63,7 +69,31 @@ void BSTree::searchWord(string val, TreeNode* node){
         this->searchWord(val, node->right);
     }
   }
+
 }
+
+// IN Order Traversal for sorted Search
+/* Given a binary tree, print its nodes in inorder*/
+void BSTree::printInorder(TreeNode* node, string val)
+{
+    if (node == NULL) return;
+
+    std::string s = node->data;
+    if(s.rfind(val,0) == 0){
+
+      /* first recur on left child */
+      printInorder(node->left, val);
+
+      /* then print the data of node */
+      cout << node->data << " \n";
+
+      /* now recur on right child */
+      printInorder(node->right,val);
+    }else{
+      return;
+    }
+}
+
 /// Insert a new value into the tree
 void BSTree::Insert(string val) {
     if(root == NULL){
@@ -130,6 +160,31 @@ int main() {
   BSTree myTree;
 
   int numOfChoice = 10;
+  myTree.Insert("a");
+  myTree.Insert("abandon");
+  myTree.Insert("ability");
+  myTree.Insert("able");
+  myTree.Insert("about");
+  myTree.Insert("above");
+  myTree.Insert("above");
+  myTree.Insert("abroad");
+  myTree.Insert("absence");
+  myTree.Insert("absent");
+  myTree.Insert("absolute");
+  myTree.Insert("abstract");
+  myTree.Insert("abuse");
+  myTree.Insert("abusive");
+  myTree.Insert("academic");
+  myTree.Insert("accept");
+  myTree.Insert("acceptable");
+  myTree.Insert("acceptance");
+  myTree.Insert("access");
+  myTree.Insert("accident");
+  myTree.Insert("accompany");
+  myTree.Insert("according");
+  myTree.Insert("account");
+  myTree.Insert("accountant");
+  myTree.Insert("accurate");
 
   do {
 
