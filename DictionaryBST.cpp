@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <cstddef>
 #include <bits/stdc++.h>
+#include <queue>
 
 using namespace std;
 
@@ -34,9 +35,29 @@ public:
     void printInorder(TreeNode* node, string val);
     TreeNode* deleteNode(TreeNode* root, string k);
     void printBT(const TreeNode* node);
+    void printLevelOrder(TreeNode *root);
 
     TreeNode* getRoot(){
       return root;
+    }
+    /* Compute the "maxDepth" of a tree -- the number of
+    nodes along the longest path from the root node
+    down to the farthest leaf node.*/
+    int maxDepth(TreeNode* node)
+    {
+        if (node == NULL)
+            return 0;
+        else
+        {
+            /* compute the depth of each subtree */
+            int lDepth = maxDepth(node->left);
+            int rDepth = maxDepth(node->right);
+
+            /* use the larger one */
+            if (lDepth > rDepth)
+                return(lDepth + 1);
+            else return(rDepth + 1);
+        }
     }
 private:
     TreeNode* root;
@@ -57,7 +78,7 @@ void BSTree::searchWord(string val){
 
 void BSTree::searchWord(string val, TreeNode* node){
   std::string s = node->data;
-  if(s.rfind(val,0) == 0){
+  if(s.rfind(val,0)==0){
     std::cout << "Data found. \n" << std::endl;
     std::cout << "Possible matches : " << std::endl;
 
@@ -86,21 +107,56 @@ void BSTree::printInorder(TreeNode* node, string val)
     if (node == NULL) return;
 
     std::string s = node->data;
-    if(s.rfind(val,0) == 0){
 
-      /* first recur on left child */
-      printInorder(node->left, val);
+    /* first recur on left child */
+    printInorder(node->left, val);
 
+    /* now recur on right child */
+    printInorder(node->right,val);
       /* then print the data of node */
+    if(s.rfind(val,0)==0){
       cout << node->data << " \n";
 
-      /* now recur on right child */
-      printInorder(node->right,val);
-    }else{
-      return;
     }
 }
+// Iterative method to find height of Bianry Tree
+void BSTree::printLevelOrder(TreeNode *root)
+{
+    // Base Case
+    if (root == NULL) return;
 
+    // Create an empty queue for level order tarversal
+    queue<TreeNode *> q;
+
+    // Enqueue Root and initialize height
+    q.push(root);
+
+    while (q.empty() == false)
+    {
+        // nodeCount (queue size) indicates number
+        // of nodes at current lelvel.
+        int nodeCount = q.size();
+        char space = '*';
+        // Dequeue all nodes of current level and
+        // Enqueue all nodes of next level
+        while (nodeCount > 0)
+        {
+            TreeNode *node = q.front();
+            std::cout << std::string((pow(2,maxDepth(node)-1))-1,space) << node->data[0] <<std::string((pow(2,maxDepth(node)-1))-1,space) ;
+            q.pop();
+            if (node->left != NULL)
+                q.push(node->left);
+            else
+                std::cout << std::string(((pow(2,maxDepth(node)-1))-1)*2,space);
+            if (node->right != NULL)
+                q.push(node->right);
+            else
+                std::cout << std::string(((pow(2,maxDepth(node)-1))-1)*2,space);
+            nodeCount--;
+        }
+        cout << endl;
+    }
+}
 /// Insert a new value into the tree
 void BSTree::Insert(string val) {
     if(root == NULL){
@@ -219,7 +275,7 @@ void BSTree::printBT(const std::string& prefix, const TreeNode* node, bool isLef
     {
         std::cout << prefix;
 
-        std::cout << (isLeft ? "├──" : "└──" );
+        std::cout << (isLeft ? "├l-" : "└r-" );
 
         // print the value of the node
         std::cout << node->data << std::endl;
@@ -246,32 +302,50 @@ int main() {
 
   string input;
 
-  myTree.Insert("a");
-  myTree.Insert("abandon");
-  myTree.Insert("ability");
-  myTree.Insert("able");
-  myTree.Insert("about");
-  myTree.Insert("above");
-  myTree.Insert("above");
-  myTree.Insert("abroad");
-  myTree.Insert("absence");
-  myTree.Insert("absent");
-  myTree.Insert("absolute");
-  myTree.Insert("abstract");
-  myTree.Insert("abuse");
-  myTree.Insert("abusive");
-  myTree.Insert("academic");
-  myTree.Insert("accept");
-  myTree.Insert("acceptable");
-  myTree.Insert("acceptance");
-  myTree.Insert("access");
-  myTree.Insert("accident");
-  myTree.Insert("accompany");
-  myTree.Insert("according");
-  myTree.Insert("account");
-  myTree.Insert("accountant");
-  myTree.Insert("accurate");
 
+
+  myTree.Insert("hospitable");
+  myTree.Insert("ship");
+  myTree.Insert("early");
+  myTree.Insert("admit");
+  myTree.Insert("weight");
+  myTree.Insert("tacky");
+  myTree.Insert("pricey");
+  myTree.Insert("describe");
+  /*
+  myTree.Insert("time");
+  myTree.Insert("envious");
+  myTree.Insert("mammoth");
+  myTree.Insert("zippy");
+  myTree.Insert("feigned");
+  myTree.Insert("earthy");
+  myTree.Insert("uninterested");
+  myTree.Insert("ability");
+  myTree.Insert("account");
+  myTree.Insert("abandon");
+  myTree.Insert("a");
+  myTree.Insert("above");
+  myTree.Insert("above");
+  myTree.Insert("absence");
+  myTree.Insert("able");
+  myTree.Insert("abroad");
+  myTree.Insert("accurate");
+  myTree.Insert("abuse");
+  myTree.Insert("abstract");
+  myTree.Insert("academic");
+  myTree.Insert("absolute");
+  myTree.Insert("accept");
+  myTree.Insert("abusive");
+  myTree.Insert("access");
+  myTree.Insert("acceptance");
+  myTree.Insert("accompany");
+  myTree.Insert("acceptable");
+  myTree.Insert("accident");
+  myTree.Insert("according");
+  myTree.Insert("about");
+  myTree.Insert("absent");
+  myTree.Insert("accountant");
+  */
   do {
 
 
@@ -301,11 +375,10 @@ int main() {
       cin >> word;
       myTree.deleteNode(myTree.getRoot(),word);
     }else if (input != "0"){
-
       cout << "Wrong input, try again. " << "\n";
     }
-
     myTree.printBT(myTree.getRoot());
+    myTree.printLevelOrder(myTree.getRoot());
 
   } while (input != "0");
 
